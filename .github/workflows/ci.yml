@@ -32,6 +32,7 @@ jobs:
 
       - name: Overwrite databricks.yml with DEV host using YAML
         run: |
+          pip install pyyaml
           python -c "
           import yaml
 
@@ -47,6 +48,18 @@ jobs:
           with open('databricks.yml', 'w') as f:
               yaml.dump(data, f, sort_keys=False)
           "
+
+      - name: Verify secrets are set
+        run: |
+          if [ -z "${{ secrets.DATABRICKS_DEV_HOST }}" ]; then
+            echo "::error::DATABRICKS_DEV_HOST secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.DATABRICKS_DEV_TOKEN }}" ]; then
+            echo "::error::DATABRICKS_DEV_TOKEN secret is not set"
+            exit 1
+          fi
+          echo "Secrets are configured correctly"
 
       - name: Validate bundle
         run: databricks bundle validate
