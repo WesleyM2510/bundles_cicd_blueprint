@@ -1,5 +1,4 @@
 ## requirements-dev.txt: dependencies for local development.
-##
 ## For defining dependencies used by jobs in Databricks Workflows, see
 ## https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
 
@@ -8,6 +7,11 @@ databricks-dlt
 
 ## pytest is the default package used for testing
 pytest
+
+## Add coverage.py for test coverage reporting
+pytest-cov
+## Add ruff for linting and code quality checks
+ruff
 
 ## Dependencies for building wheel files
 setuptools
