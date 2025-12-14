@@ -1,0 +1,68 @@
+name: Deploy to Dev
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'my_project/**'
+
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  deploy:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    environment: development
+    defaults:
+      run:
+        working-directory: my_project
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: my_project/requirements-dev.txt
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel
+
+      - name: Build wheel
+        run: python setup.py bdist_wheel
+
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Validate bundle
+        run: databricks bundle validate -t dev
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_DEV_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+
+      - name: Deploy bundle to dev
+        run: databricks bundle deploy -t dev
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_DEV_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target:** dev" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
