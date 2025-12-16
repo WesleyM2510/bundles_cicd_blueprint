@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 from pyspark.sql import SparkSession
 
-from my_project.main import  get_taxis
+from my_project.main import get_taxis
 
 
 @pytest.fixture(scope="module")
