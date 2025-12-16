@@ -10,8 +10,7 @@ from my_project.main import get_spark, get_taxis
 def spark():
     """Create a local SparkSession for testing."""
     spark = SparkSession.builder.master("local[1]").appName("test").getOrCreate()
-    yield spark
-    spark.stop()
+    return spark
 
 
 def test_get_taxis_returns_dataframe(spark):
