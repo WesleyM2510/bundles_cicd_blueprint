@@ -2,6 +2,7 @@
 ## For defining dependencies used by jobs in Databricks Workflows, see
 ## https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
 
+# install pre-commit
 ## Add code completion support for DLT
 databricks-dlt
 

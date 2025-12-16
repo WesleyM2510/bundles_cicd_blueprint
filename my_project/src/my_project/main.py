@@ -1,5 +1,5 @@
-from pyspark.sql import DataFrame, SparkSession
 from databricks.connect import DatabricksSession
+from pyspark.sql import DataFrame, SparkSession
 
 
 def get_taxis(spark: SparkSession) -> DataFrame:
@@ -10,11 +10,8 @@ def get_taxis(spark: SparkSession) -> DataFrame:
 # check that you have configured Databricks Connect correctly.
 # See https://docs.databricks.com/dev-tools/databricks-connect.html.
 def get_spark() -> SparkSession:
-    # try:
 
     return DatabricksSession.builder.getOrCreate()
-    # except ImportError:
-    #     return SparkSession.builder.getOrCreate()
 
 
 def main():
