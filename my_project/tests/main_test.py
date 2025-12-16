@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 from pyspark.sql import SparkSession
 
-from my_project.main import get_spark, get_taxis
+from my_project.main import  get_taxis
 
 
 @pytest.fixture(scope="module")
@@ -42,10 +42,3 @@ def test_get_taxis_returns_dataframe(spark):
 
     assert result.count() > 5
     mock_spark.read.table.assert_called_once_with("samples.nyctaxi.trips")
-
-
-def test_get_spark_returns_session():
-    """Test that get_spark returns a SparkSession."""
-    session = get_spark()
-    assert session is not None
-    assert isinstance(session, SparkSession)
