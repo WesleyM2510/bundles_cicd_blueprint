@@ -12,9 +12,9 @@ pytest
 pytest-cov
 
 ## PySpark for running tests locally with a local SparkSession
-pyspark
 ## Add ruff for linting and code quality checks
 ruff
+zstandard
 
 ## Dependencies for building wheel files
 setuptools
@@ -32,5 +32,5 @@ wheel
 ## to install the package system-wide. Or uncomment the line below to install a
 ## version of db-connect that corresponds to the Databricks Runtime version used
 ## for this project.
-#
+
 # databricks-connect>=15.4,<15.5

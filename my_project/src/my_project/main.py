@@ -9,12 +9,8 @@ def get_taxis(spark: SparkSession) -> DataFrame:
 # check that you have configured Databricks Connect correctly.
 # See https://docs.databricks.com/dev-tools/databricks-connect.html.
 def get_spark() -> SparkSession:
-    try:
-        from databricks.connect import DatabricksSession
-
-        return DatabricksSession.builder.getOrCreate()
-    except ImportError:
-        return SparkSession.builder.getOrCreate()
+    # Create a serverless Spark session
+    return SparkSession.builder.remote("databricks").getOrCreate()
 
 
 def main():
