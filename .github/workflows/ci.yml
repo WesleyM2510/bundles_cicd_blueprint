@@ -29,12 +29,48 @@ jobs:
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
+      
+      - name: Verify secrets are set
+        run: |
+          if [ -z "${{ secrets.DATABRICKS_DEV_HOST }}" ]; then
+            echo "::error::DATABRICKS_DEV_HOST secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.DATABRICKS_DEV_CLIENT_ID }}" ]; then
+            echo "::error::DATABRICKS_DEV_CLIENT_ID secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.DATABRICKS_DEV_CLIENT_SECRET }}" ]; then
+            echo "::error::DATABRICKS_DEV_CLIENT_SECRET secret is not set"
+            exit 1
+          fi
+          echo "Secrets are configured correctly"
+
+      - name: Overwrite databricks.yml with DEV host using YAML
+        run: |
+          pip install pyyaml
+          python -c "
+          import yaml
+
+          with open('databricks.yml') as f:
+              data = yaml.safe_load(f)
+
+          # Overwrite dev workspace.host with secret
+          if 'targets' in data and 'dev' in data['targets']:
+              if 'workspace' not in data['targets']['dev']:
+                  data['targets']['dev']['workspace'] = {}
+              data['targets']['dev']['workspace']['host'] = '${{ secrets.DATABRICKS_DEV_HOST }}'
+
+          with open('databricks.yml', 'w') as f:
+              yaml.dump(data, f, sort_keys=False)
+          "
 
       - name: Validate bundle
         run: databricks bundle validate
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_DEV_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_DEV_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_DEV_CLIENT_SECRET }}
 
   test:
     name: Run Tests
@@ -70,7 +106,8 @@ jobs:
             --cov-fail-under=${{ env.MIN_COVERAGE }}
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_DEV_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_DEV_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_DEV_CLIENT_SECRET }}
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -93,7 +130,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{env.PYTHON_VERSION }}
 
       - name: Install linters
         run: pip install ruff

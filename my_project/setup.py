@@ -6,13 +6,14 @@ be executed directly. See README.md for how to deploy, test, and run
 the my_project project.
 """
 
-from setuptools import setup, find_packages
-
 import sys
+
+from setuptools import find_packages, setup
 
 sys.path.append("./src")
 
 import datetime
+
 import my_project
 
 local_version = datetime.datetime.utcnow().strftime("%Y%m%d.%H%M%S")
