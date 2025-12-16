@@ -10,6 +10,7 @@ def get_taxis(spark: SparkSession) -> DataFrame:
 def get_spark() -> SparkSession:
     return DatabricksSession.builder.serverless(True).getOrCreate()
 
+
 def main():
     get_taxis(get_spark()).show(5)
 
