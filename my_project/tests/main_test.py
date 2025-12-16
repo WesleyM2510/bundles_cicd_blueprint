@@ -1,18 +1,15 @@
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
 from pyspark.sql import SparkSession
-from my_project.main import get_taxis, get_spark
+
+from my_project.main import get_spark, get_taxis
 
 
 @pytest.fixture(scope="module")
 def spark():
     """Create a local SparkSession for testing."""
-    spark = (
-        SparkSession.builder
-        .master("local[1]")
-        .appName("test")
-        .getOrCreate()
-    )
+    spark = SparkSession.builder.master("local[1]").appName("test").getOrCreate()
     yield spark
     spark.stop()
 
@@ -28,7 +25,13 @@ def test_get_taxis_returns_dataframe(spark):
         (5, "2023-01-05", "2023-01-05", 2.5, 12.0),
         (6, "2023-01-06", "2023-01-06", 4.0, 25.0),
     ]
-    columns = ["trip_id", "pickup_datetime", "dropoff_datetime", "trip_distance", "fare_amount"]
+    columns = [
+        "trip_id",
+        "pickup_datetime",
+        "dropoff_datetime",
+        "trip_distance",
+        "fare_amount",
+    ]
     expected_df = spark.createDataFrame(mock_data, columns)
 
     # Create a mock SparkSession with mocked read.table()
