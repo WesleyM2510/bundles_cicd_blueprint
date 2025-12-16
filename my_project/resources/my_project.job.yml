@@ -20,27 +20,27 @@ resources:
           notebook_task:
             notebook_path: ../src/notebook.ipynb
         
-        - task_key: refresh_pipeline
-          depends_on:
-            - task_key: notebook_task
-          environment_key: Default
-          pipeline_task:
-            pipeline_id: ${resources.pipelines.my_project_pipeline.id}
+        # - task_key: refresh_pipeline
+        #   depends_on:
+        #     - task_key: notebook_task
+        #   environment_key: Default
+        #   pipeline_task:
+        #     pipeline_id: ${resources.pipelines.my_project_pipeline.id}
         
-        - task_key: main_task
-          depends_on:
-            - task_key: refresh_pipeline
-          environment_key: Default
-          python_wheel_task:
-            package_name: my_project
-            entry_point: main
-          libraries:
-            # By default we just include the .whl file generated for the my_project package.
-            # See https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
-            # for more information on how to add other libraries.
-            - whl: ../dist/*.whl
+        # - task_key: main_task
+        #   depends_on:
+        #     - task_key: notebook_task
+        #   environment_key: Default
+        #   python_wheel_task:
+        #     package_name: my_project
+        #     entry_point: main
+        #   libraries:
+        #     # By default we just include the .whl file generated for the my_project package.
+        #     # See https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
+        #     # for more information on how to add other libraries.
+        #     - whl: ../dist/*.whl
       environments:
         - environment_key: Default
           spec:
-            environment_version: "4"
+            client: "1"
       performance_target: PERFORMANCE_OPTIMIZED
