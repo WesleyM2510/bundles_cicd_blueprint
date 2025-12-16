@@ -3,10 +3,8 @@ name: Deploy to Dev
 on:
   push:
     branches:
-      - main
-    paths:
-      - 'my_project/**'
-
+      - develop
+      
   workflow_dispatch:
 
 concurrency:
