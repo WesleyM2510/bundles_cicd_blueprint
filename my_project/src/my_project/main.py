@@ -6,13 +6,9 @@ def get_taxis(spark: SparkSession) -> DataFrame:
     return spark.read.table("samples.nyctaxi.trips")
 
 
-# Create a new Databricks Connect session. If this fails,
-# check that you have configured Databricks Connect correctly.
-# See https://docs.databricks.com/dev-tools/databricks-connect.html.
+# Create a new Databricks Connect session using serverless.
 def get_spark() -> SparkSession:
-
-    return DatabricksSession.builder.getOrCreate()
-
+    return DatabricksSession.builder.serverless(True).getOrCreate()
 
 def main():
     get_taxis(get_spark()).show(5)
