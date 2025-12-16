@@ -10,6 +10,9 @@ pytest
 
 ## Add coverage.py for test coverage reporting
 pytest-cov
+
+## PySpark for running tests locally with a local SparkSession
+pyspark
 ## Add ruff for linting and code quality checks
 ruff
 
