@@ -29,6 +29,22 @@ jobs:
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
+      
+      - name: Verify secrets are set
+        run: |
+          if [ -z "${{ secrets.DATABRICKS_DEV_HOST }}" ]; then
+            echo "::error::DATABRICKS_DEV_HOST secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.DATABRICKS_DEV_CLIENT_ID }}" ]; then
+            echo "::error::DATABRICKS_DEV_CLIENT_ID secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.DATABRICKS_DEV_CLIENT_SECRET }}" ]; then
+            echo "::error::DATABRICKS_DEV_CLIENT_SECRET secret is not set"
+            exit 1
+          fi
+          echo "Secrets are configured correctly"
 
       - name: Overwrite databricks.yml with DEV host using YAML
         run: |
@@ -49,23 +65,12 @@ jobs:
               yaml.dump(data, f, sort_keys=False)
           "
 
-      - name: Verify secrets are set
-        run: |
-          if [ -z "${{ secrets.DATABRICKS_DEV_HOST }}" ]; then
-            echo "::error::DATABRICKS_DEV_HOST secret is not set"
-            exit 1
-          fi
-          if [ -z "${{ secrets.DATABRICKS_DEV_TOKEN }}" ]; then
-            echo "::error::DATABRICKS_DEV_TOKEN secret is not set"
-            exit 1
-          fi
-          echo "Secrets are configured correctly"
-
       - name: Validate bundle
         run: databricks bundle validate
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_DEV_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_DEV_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_DEV_CLIENT_SECRET }}
 
   test:
     name: Run Tests
@@ -101,7 +106,8 @@ jobs:
             --cov-fail-under=${{ env.MIN_COVERAGE }}
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_DEV_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_DEV_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_DEV_CLIENT_SECRET }}
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
