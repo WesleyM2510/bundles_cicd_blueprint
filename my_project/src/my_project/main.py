@@ -1,20 +1,14 @@
-from pyspark.sql import SparkSession, DataFrame
+from databricks.connect import DatabricksSession
+from pyspark.sql import DataFrame, SparkSession
 
 
 def get_taxis(spark: SparkSession) -> DataFrame:
     return spark.read.table("samples.nyctaxi.trips")
 
 
-# Create a new Databricks Connect session. If this fails,
-# check that you have configured Databricks Connect correctly.
-# See https://docs.databricks.com/dev-tools/databricks-connect.html.
+# Create a new Databricks Connect session using serverless.
 def get_spark() -> SparkSession:
-    try:
-        from databricks.connect import DatabricksSession
-
-        return DatabricksSession.builder.getOrCreate()
-    except ImportError:
-        return SparkSession.builder.getOrCreate()
+    return DatabricksSession.builder.serverless(True).getOrCreate()
 
 
 def main():

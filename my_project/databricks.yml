@@ -16,12 +16,12 @@ targets:
     mode: development
     default: true
     workspace:
-      host: https://e2-dogfood.staging.cloud.databricks.com
+      host: https://dbc-0a77f689-2d79.cloud.databricks.com
 
   prod:
     mode: production
     workspace:
-      host: https://e2-dogfood.staging.cloud.databricks.com
+      host: https://dbc-8b84bb35-57cb.cloud.databricks.com
       # We explicitly specify /Workspace/Users/wesley.maciel@databricks.com to make sure we only have a single copy.
       root_path: /Workspace/Users/wesley.maciel@databricks.com/.bundle/${bundle.name}/${bundle.target}
     permissions:

@@ -1,13 +1,21 @@
 ## requirements-dev.txt: dependencies for local development.
-##
 ## For defining dependencies used by jobs in Databricks Workflows, see
 ## https://docs.databricks.com/dev-tools/bundles/library-dependencies.html
 
+# install pre-commit
 ## Add code completion support for DLT
 databricks-dlt
 
 ## pytest is the default package used for testing
 pytest
+
+## Add coverage.py for test coverage reporting
+pytest-cov
+
+## PySpark for running tests locally with a local SparkSession
+## Add ruff for linting and code quality checks
+ruff
+zstandard
 
 ## Dependencies for building wheel files
 setuptools
@@ -25,5 +33,5 @@ wheel
 ## to install the package system-wide. Or uncomment the line below to install a
 ## version of db-connect that corresponds to the Databricks Runtime version used
 ## for this project.
-#
-# databricks-connect>=15.4,<15.5
+
+databricks-connect
